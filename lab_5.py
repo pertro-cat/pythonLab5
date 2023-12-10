@@ -1,98 +1,111 @@
-from enum import Enum
+"""
+program for testing code
+"""
+from dataclasses import dataclass
 
-class Genre(Enum):
-    ACTION = 2
-    COMEDY = 1
-    DRAMA = 3
-    FANTASY = 5
+@dataclass
+class Movie:
+    """
+     Movie in cinema
+    """
+    id_: str
+    title: str
+    ranking: int
+    release_date: int
+    character_number: int
+    ticket_price: int
+    comment: int
 
-class MovieDetails:
-    def __init__(self, id, title, ranking, release_date):
-        self.id = id
-        self.title = title
-        self.ranking = ranking
-        self.release_date = release_date
+    def __eq__(self, other):
+        if isinstance(other, Movie):
+            return (
+                self.id_ == other.id_ and
+                self.title == other.title and
+                self.ranking == other.ranking and
+                self.release_date == other.release_date and
+                self.character_number == other.character_number and
+                self.ticket_price == other.ticket_price and
+                self.comment == other.comment
+            )
+        return False
 
-class MovieAdditionally:
-    def __init__(self, character_number, ticket_price, comment):
-        self.character_number = character_number
-        self.ticket_price = ticket_price
-        self.comment = comment
+    def get_all(self):
+        """Get all details of the movie."""
+        return (f"id_film: {self.id_}, Title: {self.title}, Ranking: {self.ranking}, "
+                f"Release date: {self.release_date}, Character number: {self.character_number}, "
+                f"Ticket price: {self.ticket_price} UAN, Comment: {self.comment}")
 
-class Movie(MovieDetails, MovieAdditionally):
-    def __init__(self, id, title, ranking, release_date, character_number, ticket_price, comment):
-        MovieDetails.__init__(self, id, title, ranking, release_date)
-        MovieAdditionally.__init__(self, character_number, ticket_price, comment)
-    def getAll(self):
-        return (f"id_film: {self.id}, Title: {self.title}, Ranking: {self.ranking}, Release date: {self.release_date},"
-                f" Character number: {self.character_number}, Ticket price: {self.ticket_price} UAN, Comment: {self.comment}")
+    def get_release_year(self):
+        """Get the release year of the movie."""
+        return int(self.release_date)
 
-def get_release_year(movie):
-    return int(movie.release_date)
-
-def sort_movies_by_release_year(movies):
-    return sorted(movies, key=get_release_year)
-
+    def __str__(self):
+        """String representation of the movie."""
+        return f"{self.title} ({self.release_date}), Ranking: {self.ranking}"
 
 class Cinema:
+    """Representation of a cinema."""
     def __init__(self, name, location):
         self.name = name
         self.location = location
 
-def calculateProfit(price, visitor):
-    profit_in_day = price * visitor
-    return profit_in_day
+    def __str__(self):
+        """String representation of the cinema."""
+        return f"Name - {self.name}, Location - {self.location}"
+
+    def see_my_film(self, movie):
+        """Get the movie currently showing in the cinema."""
+        return f"{self.name} is showing {movie.title}"
+
+def calculate_profit(price, visitor):
+    """Calculate the profit based on ticket price and number of visitors."""
+    return price * visitor
 
 def select_movie(movies, desired_ranking, character_number):
-    selected_movies = []
-
-    for movie in movies:
-        ranking = int(movie.ranking)
-
-        if ranking == int(desired_ranking) and int(movie.character_number) >= character_number:
-            selected_movies.append(movie)
-
-    return selected_movies
+    """Select movies based on ranking and character number."""
+    return [movie for movie in movies if int(movie.ranking) == int(desired_ranking)
+            and int(movie.character_number) >= character_number]
 
 def main():
-    Film_1 = Movie("a123", "Oppenheimer", "10", "2023",
-                   "12", 150, "Один з найкращих фільмів")
-    Film_2 = Movie("b456", "Interstellar",
-                   "5", "2014", "5", 100, "Топ в науковій фантастиці")
-    Film_3 = Movie("c789", "Barie", "10", "2023",
-                   "23", 150, "Класний фільм")
-    Film_4 = Movie("d159", "Forsage 10", "8", "2023",
-                   "25", 200, "Один з найкращих фільмів")
+    """Main function."""
+    film_1 = Movie("a123", "Oppenheimer", "10", "2023", "12",
+                   150, "Один з найкращих фільмів")
+    film_2 = Movie("b456", "Interstellar", "5", "2014", "5",
+                   100, "Топ в науковій фантастиці")
+    film_3 = Movie("c789", "Barie", "10", "2023", "23",
+                   150, "Класний фільм")
+    film_4 = Movie("d159", "Forsage 10", "8", "2023", "25",
+                   200, "Один з найкращих фільмів")
 
-    print("Poster_1", Film_1.getAll())
-    print("Poster_2", Film_2.getAll())
-    print("Poster_3", Film_3.getAll())
-    print("Poster_4", Film_4.getAll())
+    print("Poster_1", film_1.get_all())
+    print("Poster_2", film_2.get_all())
+    print("Poster_3", film_3.get_all())
+    print("Poster_4", film_4.get_all())
 
-    Cinema_1 = Cinema("IMAX", "Lviv, King Cross")
-    Cinema_2 = Cinema("Planeta Kino", "Lviv, Forum")
-    print("Cinema 1: Name -", Cinema_1.name, "Location -", Cinema_1.location)
-    print("Cinema 2: Name -", Cinema_2.name, "Location -", Cinema_2.location)
+    cinema_1 = Cinema("IMAX", "Lviv, King Cross")
+    cinema_2 = Cinema("Planeta Kino", "Lviv, Forum")
+    print(f"Cinema 1: {cinema_1}")
+    print(f"Cinema 2: {cinema_2}")
 
-    profit = calculateProfit(150, 300)
+    profit = calculate_profit(150, 300)
     print("Profit:", profit)
 
-    selected_movies = select_movie([Film_1, Film_2, Film_3, Film_4], "10", 10)
+    selected_movies = select_movie([film_1, film_2, film_3, film_4], "10", 10)
 
     if selected_movies:
         print("Selected movies:")
         for movie in selected_movies:
-            print(f"{movie.title} ({movie.release_date}), Ranking: {movie.ranking}")
+            print(movie)
     else:
         print("No movies meet the criteria.")
 
-    sorted_movies = sort_movies_by_release_year([Film_1, Film_2, Film_3, Film_4])
+    sorted_movies = sorted([film_1, film_2, film_3, film_4], key=Movie.get_release_year)
     print("\nMovies sorted by release year:")
     for movie in sorted_movies:
-        print(f"{movie.title} ({movie.release_date})")
+        print(movie)
 
 if __name__ == "__main__":
     main()
 
 
-
+#   pylint lab_5_pylint.py
