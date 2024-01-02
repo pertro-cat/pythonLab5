@@ -22,6 +22,9 @@ class Genre(Enum):
     FANTASY = 5
 
 class MovieDetails:
+    """
+    movie detals parametrs
+    """
     def __init__(self, id, title, ranking, release_date):
         if not (id and title and ranking and release_date):
             raise InvalidMovieDetailsException("Invalid movie details.")
@@ -31,6 +34,9 @@ class MovieDetails:
         self.release_date = release_date
 
 class MovieAdditionally:
+    """
+    movie additional parametrs
+    """
     def __init__(self, character_number, ticket_price, comment):
         if not (character_number and ticket_price and comment):
             raise InvalidMovieAdditionallyException("Invalid movie additionally details.")
@@ -39,6 +45,9 @@ class MovieAdditionally:
         self.comment = comment
 
 class Movie(MovieDetails, MovieAdditionally):
+    """
+    all parametrs
+    """
     def __init__(self, id, title, ranking, release_date, character_number, ticket_price, comment):
         if not (id and title and ranking and release_date and character_number and ticket_price and comment):
             raise InvalidMovieException("Invalid movie parameters")
@@ -48,7 +57,9 @@ class Movie(MovieDetails, MovieAdditionally):
     def getAll(self):
         return (f"id_film: {self.id}, Title: {self.title}, Ranking: {self.ranking}, Release date: {self.release_date},"
                 f" Character number: {self.character_number}, Ticket price: {self.ticket_price} UAN, Comment: {self.comment}")
-
+"""
+this function calculate profit
+"""
 def calculateProfit(ticket_price, audience):
     if ticket_price < 0 or audience < 0:
         raise InvalidProfitCalculationException("Invalid profit calculation parameters")
@@ -56,11 +67,16 @@ def calculateProfit(ticket_price, audience):
 
 def get_release_year(movie):
     return int(movie.release_date)
-
+"""
+this function sorted movie
+"""
 def sort_movies_by_release_year(movies):
     return sorted(movies, key=get_release_year)
 
 class Cinema:
+    """
+    cinema paremetrs
+    """
     def __init__(self, name, location):
         if not (name and location):
             raise CinemaNotFoundException("Your cinema has incorrect parameters")
